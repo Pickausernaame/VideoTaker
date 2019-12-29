@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-const l = "https://vk.com/video?z=video-38316314_456244552%2Fpl_cat_trends"
+const l = "https://vk.com/rutube?z=video570672945_456239150%2F0d6d67436fdbf1ea56%2Fpl_wall_-23459697"
 
 func ClearLink(link string) string {
 	const BASE_URL = "https://m.vk.com/video"

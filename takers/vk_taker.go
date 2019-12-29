@@ -38,7 +38,7 @@ func VK_take(link string) (links []string, resolutions []string, err error) {
 			links[i] = strings.Split(links[i], "/index")[0] + "." + resolutions[i] + ".mp4"
 			links[i] = strings.Replace(links[i], "/video/hls", "", 1)
 		}
-
+		return
 	})
 
 	c.Visit(link)
