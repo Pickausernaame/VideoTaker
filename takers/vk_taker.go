@@ -10,6 +10,8 @@ import (
 
 func VK_take(link string) (links []string, resolutions []string, err error) {
 	c := colly.NewCollector()
+	DEFAULT_RESOLUTIONS := [5]string{"240", "360", "480", "720", "1080"}
+
 	c.OnHTML("source[type='application/vnd.apple.mpegurl']", func(e *colly.HTMLElement) {
 		resp, err := http.Get(e.Attr("src"))
 		if err != nil {
@@ -23,25 +25,23 @@ func VK_take(link string) (links []string, resolutions []string, err error) {
 			return
 		}
 		strs := strings.Split(string(b), "\n")
+		res_count := 0
 		for _, v := range strs {
 			if strings.Contains(v, "RESOLUTION") {
-				res := strings.Split(v, "x")
-				resolutions = append(resolutions, res[len(res)-1])
+				res_count++
 			} else if strings.Contains(v, "https") {
 				links = append(links, v)
 			}
 		}
+		resolutions = DEFAULT_RESOLUTIONS[:res_count]
 		for i := 0; i < len(links); i++ {
 			links[i] = strings.Split(links[i], "/index")[0] + "." + resolutions[i] + ".mp4"
 			links[i] = strings.Replace(links[i], "/video/hls", "", 1)
 		}
-		for _, v := range links {
-			fmt.Println(v)
-		}
+
 	})
-	c.OnRequest(func(r *colly.Request) {
-		fmt.Println("Visiting", r.URL)
-	})
+
 	c.Visit(link)
+
 	return
 }
