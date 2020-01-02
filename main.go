@@ -2,29 +2,36 @@ package main
 
 import (
 	"fmt"
-	"github.com/Pickausernaame/VideoTaker/takers"
-	"log"
+	"github.com/Pickausernaame/VideoTaker/models"
+	"github.com/Pickausernaame/VideoTaker/takers/twitter"
+	"github.com/Pickausernaame/VideoTaker/takers/vk"
+	"net/url"
 	"strings"
 )
 
-const l = "https://vk.com/rutube?z=video570672945_456239150%2F0d6d67436fdbf1ea56%2Fpl_wall_-23459697"
-
-func ClearLink(link string) string {
-	const BASE_URL = "https://m.vk.com/video"
-	clear := strings.Split(link, "z=video")
-	return BASE_URL + strings.Split(clear[len(clear)-1], "%")[0]
-}
-
 func main() {
-	link := ClearLink(l)
-	fmt.Print(link)
-	links, res, err := takers.VK_take(link)
+
+	uri := "https://vk.com/video?z=video-45745333_456276145%2Fpl_cat_trends"
+	var vs models.Videos
+	u, err := url.Parse(uri)
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err)
+		return
 	}
-	for i, v := range links {
-		fmt.Println(res[i])
-		fmt.Println(v)
+	switch {
+	case strings.Contains(u.Host, "vk.com"):
+		vs, err = vk.TakeVideo(uri)
+		break
+	case strings.Contains(u.Host, "twitter.com"):
+		vs, err = twitter.TakeVideos(uri)
+		break
 	}
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(vs)
 
 }
