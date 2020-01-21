@@ -288,7 +288,7 @@ func getVideoPart(url string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	fileName := "./twitter/" + extractFilename(url)
+	fileName := "./videos/twitter/ts" + extractFilename(url)
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
@@ -322,7 +322,7 @@ func combineTs(filename string, files []string) {
 }
 
 func convertTStoMP4(tsFilename string) (mp4Filename string) {
-	resultDir := "./mp4/"
+	resultDir := "./videos/twitter"
 	mp4Filename = resultDir + strings.Replace(strings.Replace(tsFilename, ".ts", ".mp4", 1), "./twitter/", "", 1)
 	convert := exec.Command("ffmpeg", "-i", tsFilename, "-c", "copy", mp4Filename, "-y")
 
